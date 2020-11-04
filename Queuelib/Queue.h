@@ -1,5 +1,5 @@
-#ifndef _MY_VECTOR_
-#define _MY_VECTOR_
+#ifndef _Queue_
+#define _Queue_
 #include <iostream>
 using namespace std;
 
@@ -30,7 +30,28 @@ public:
     int Length() {
         return length;
     }
+
+    void MaxElement(int LengthQueue);
 };
+
+template<class ValType>
+inline void Queue<ValType>::MaxElement(int LengthQueue){
+    int tmp1 = 0;
+    int tmp2 = 0;
+    for (int i = 0; i < LengthQueue; i++)
+        PushQueue(rand());
+
+    cout << "queue = {";
+    for (int i = 0; i < LengthQueue; i++) {
+        tmp1 = GetQueue();
+        cout << tmp1;
+        if (i < LengthQueue - 1) cout << ", ";
+        if (i == 0) tmp2 = tmp1;
+        if (tmp1 > tmp2) tmp2 = tmp1;
+    }
+    cout << "} " << endl;
+    cout << "max element in queue: " << tmp2 << endl;
+}
 
 template <class T1>
 ostream& operator<< (ostream& ostr, const Queue<T1> &p) {
@@ -74,7 +95,7 @@ Queue<ValType>::Queue(Queue<ValType>& v){
     first = v.first;
     last = v.last;
     count = v.count;
-    pQueue = new ValType[count];
+    pQueue = new ValType[length];
     for (int i = 0; i < count; i++)
         pQueue[i] = v.pQueue[i];
 }
@@ -97,7 +118,7 @@ Queue<ValType>& Queue<ValType>::operator=(Queue<ValType>& v)
     last = v.last;
     count = v.count;
     delete[] pQueue;
-    pQueue = new ValType[count];
+    pQueue = new ValType[length];
     for (int i = 0; i < count; i++)
         pQueue[i] = v.pQueue[i];
     return *this;
@@ -106,20 +127,23 @@ template<class ValType>
 inline void Queue<ValType>::PushQueue(ValType temp){
     if (count >= length)
         throw logic_error("Input error: invalide value of Queue length in PushQueue");
-
-    pQueue[last+1] = temp;
+    
     last = (last + 1) % length;
+    pQueue[last] = temp;
+    ++count;
 }
 
 template<class ValType>
 inline ValType Queue<ValType>::GetQueue(){
     if (count == 0)
         throw logic_error("Input error: invalide value of Queue length in GetQueue");
-
-    ValType temp = pQueue[first];
+    
     first = (first + 1) % length;
+    ValType temp = pQueue[first];
+    
     return temp;
 }
+
 
 
 
