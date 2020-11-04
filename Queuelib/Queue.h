@@ -27,9 +27,7 @@ public:
     template <class ValType1>
     friend istream& operator>> (istream& istr, Queue<ValType1>& p);
 
-    int Length() {
-        return length;
-    }
+    int Length() {return length;}
 
     void MaxElement(int LengthQueue);
 };
