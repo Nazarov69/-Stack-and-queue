@@ -1,5 +1,5 @@
-#ifndef _Stack_
-#define _Stack_
+#ifndef _STACK_
+#define _STACK_
 #include <iostream>
 using namespace std;
 
@@ -26,126 +26,126 @@ public:
     int GetLength() {
         return length;
     }
-    void DeleteEven(int LengthStack);
+    void DeleteEven();
 
-    void TwoStack(int LengthStack);
+    void TwoStack(Stack<ValType>& v);
 };
 
 // будем считать, что LengthStack это длина одного из стеков, а длина второго стека будет задана пользователем
 template<class ValType>
-inline void Stack<ValType>::TwoStack(int LengthStack){
-    cout << "введите длину первого стека (не больше : " << LengthStack << ")" << endl;
-    int len1;
-    cin >> len1;
-   cout << "введите длину второго стека (длина стека не должна превышать : " << LengthStack - len1 << ")" << endl;
-   int len2;
-   cin >> len2;
-   ValType* array1 = new ValType[len1];
-   for (int i = 0; i < len1; i++) PushStack(rand());
-   cout << "stack1 = {";
-   for (int i = 0; i < len1; i++) {
-       array1[i] = GetStack();
-       cout << array1[i];
-       if (i < len1 - 1) cout << ", ";
-   }
-   cout << "} " << endl;
+inline void Stack<ValType>::TwoStack(Stack<ValType>& v) {
+    int tmp;
+    int len;
+    if (this->length > v.length)
+        len = this->length;
+    else len = v.length;
+    ValType* tmparray = new ValType [len];
+    if (len == this->length)
+        for (int i = 0; i < len; i++)
+            tmparray[i] = this->pStack[i];
+    else
+        for (int i = 0; i < len; i++)
+            tmparray[i] = v.pStack[i];
 
-    
-    ValType* array2 = new ValType[len2];
-    for (int i = 0; i < len2; i++) PushStack(rand());
-    cout << "stack2 = {";
-    for (int i = 0; i < len2; i++) {
-        array2[i] = GetStack();
-        cout << array2[i];
-        if (i < len2 - 1) cout << ", ";
+    cout << "stack1 = {";
+    for (int i = 0; i < this->length; i++) {
+        tmp = this->pStack[i];
+        cout << tmp;
+        if (i < this->length - 1) cout << ", ";
     }
     cout << "} " << endl;
-
-    int len3;
-    if (len1 > len2)
-        len3 = len1;
-    else len3 = len2;
-
-    ValType* array3 = new ValType[len3];
-    // копируем в третий созданный стек тот, у которого длина больше (между первым и вторым)
+    int tmp1;
+    cout << "stack2 = {";
+    for (int i = 0; i < v.length; i++) {
+        tmp1 = v.pStack[i];
+        cout << tmp1;
+        if (i < v.length - 1) cout << ", ";
+    }
+    cout << "} " << endl;
     
-    if (len3 == len1) {
-        cout << "new stack2 = {";
-        for (int i = 0; i < len3; i++) {
-            array3[i] = array1[i];
-            cout << array3[i];
-            if (i < len3 - 1) cout << ", ";
+  
+
+    if (len == this->length) {
+        int temp = this->length;
+        this->length = v.length;
+        v.length = temp;
+        delete[] this->pStack;
+        this->pStack = new ValType [this->length];
+        cout << "new stack1 = {";
+        for (int i = 0; i < this->length; i++) {
+            this->pStack[i] = v.pStack[i];
+            cout << this->pStack[i];
+            if (i < this->length - 1) cout << ", ";
         }
         cout << "} " << endl;
     }
     else {
-        cout << "new stack1 = {";
-        for (int i = 0; i < len2; i++) {
-            array3[i] = array2[i];
-            cout << array3[i];
-            if (i < len2 - 1) cout << ", ";
+        int temp = v.length;
+        v.length = this->length;
+        this->length = temp;
+        delete[] v.pStack;
+        v.pStack = new ValType [v.length];
+        cout << "new stack2 = {";
+        for (int i = 0; i < v.length; i++) {
+            v.pStack[i] = this->pStack[i];
+            cout << v.pStack[i];
+            if (i < v.length - 1) cout << ", ";
         }
         cout << "} " << endl;
     }
-    // копируем в стек наибольшей длины тот стек, у которого длина меньше
 
-    if (len3 == len1) {
-        cout << "new stack1 = {";
-        for (int i = 0; i < len2; i++) {
-            array1[i] = array2[i];
-            cout << array1[i];
-            if (i < len2 - 1) cout << ", ";
+    if (len == v.length) {
+        delete[] v.pStack;
+        v.pStack = new ValType[v.length];
+        cout << "new stack2 = {";
+        for (int i = 0; i < len; i++) {
+            v.pStack[i] = tmparray[i];
+            cout << v.pStack[i];
+            if (i < len - 1) cout << ", ";
         }
         cout << "} " << endl;
     }
     else {
-        cout << "new stack2 = {";
-        for (int i = 0; i < len1; i++) {
-            array2[i] = array1[i];
-            cout << array2[i];
-            if (i < len1 - 1) cout << ", ";
+        this->length = len;
+        delete[] this->pStack;
+        this->pStack = new ValType [this->length];
+        cout << "new stack1 = {";
+        for (int i = 0; i < len; i++) {
+            pStack[i] = tmparray[i];
+            cout << pStack[i];
+            if (i < len - 1) cout << ", ";
         }
         cout << "} " << endl;
     }
-
-
-
-    
-
 }
 
 
 
 
 template<class ValType>
-inline void Stack<ValType>::DeleteEven(int LengthStack){
-    int tmp = 0;
-    int sum = 0; // будет отвечать за количество элементов в новом массиве из нечетных чисел
-    ValType* array = new ValType[LengthStack];
-    for (int i = 0; i < LengthStack; i++)
-        array[i] = NULL;
-    for (int i = 0; i < LengthStack; i++)
-        PushStack(rand());
-
+inline void Stack<ValType>::DeleteEven() {
+    ValType tmp;
+    int sum = length;;
     cout << "stack = {";
-    for (int i = 0; i < LengthStack; i++) {
+    for (int i = 0; i < length; i++) {
         tmp = GetStack();
         cout << tmp;
-        if (tmp % 2 == 1) {
-                array[sum] = tmp;
-                sum++;  
+        if (tmp % 2 == 0) {
+            for (int k = (length - 1 - i); k < length; k++)
+                pStack[k] = pStack[k + 1];
+            sum--;
         }
-            if (i < LengthStack - 1) cout << ", ";
+        if (i < length - 1) cout << ", ";
     }
     cout << "} " << endl;
 
     cout << "new array = {";
-    for (int i = 0; i < sum; i++) {
-        cout << array[i];
-        if (i < sum - 1) cout << ", ";
+    for (sum; sum > 0; sum--) {
+        cout << pStack[sum-1];
+        if (sum != 1)cout << ", ";
     }
     cout << "}" << endl;
-   
+
 }
 
 
@@ -234,6 +234,4 @@ inline ValType Stack<ValType>::GetStack(){
     top--;
     return temp;
 }
-
-
 #endif
